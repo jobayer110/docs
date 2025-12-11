@@ -145,6 +145,26 @@ services:
       io.balena.features.requires.arch.sw: 'aarch64'
 ```
 
+{{ $names.company.upper }} also supports specifying OS and kernel slug and version requirements. Only one OS and kernel slug may be specified at a time.
+| Label                                                        | Type        | Description                                                                  | Valid from Supervisor |
+| io.{{ $names.company.short }}.features.requires.sw.balena-os | `sw.os`     | Host OS slug and version (specified as a [version range][version-range])     | 17.X.Y (TODO)         |
+| io.{{ $names.company.short }}.features.requires.sw.linux     | `sw.kernel` | Host kernel slug and version (specified as a [version range][version-range]) | 17.X.Y (TODO)         |
+
+Here's an example of how to specify an OS and kernel requirement:
+```yaml
+version: '2'
+services:
+  first-service:
+    build: ./first-service
+    labels:
+      io.balena.features.requires.sw.balena-os: '>6.3.0+rev4'
+  second-service:
+    image: my-second-image
+    labels:
+      io.balena.features.requires.sw.linux: '>5.15.*'
+```
+The labels above translate to an OS requirement of version `>6.3.0+rev4` and type `balena-os`, and a kernel requirement of version `'>5.15.*'` and type `linux`. Currently, we only support `balena-os` for `sw.os` and `linux` for `sw.kernel`, but may add more in the future.
+
 #### Optional containers
 
 By default, when a container requirement is not met, none of the services are deployed to the device. However, in a multi-container release, it is possible to ignore those services that do not meet requirements with the other services being deployed as normal. To do so, we make use of the `io.balena.features.optional: 1` label to indicate which services should be considered optional.
